@@ -261,4 +261,5 @@ public class setLocationMap extends AppCompatActivity implements OnMapReadyCallb
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
 }

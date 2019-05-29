@@ -1,11 +1,17 @@
 package com.example.aser.blinds;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import java.util.List;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -64,12 +70,22 @@ public class Office extends AppCompatActivity implements OnMapReadyCallback, Map
     // variables needed to initialize navigation
     private Button button;
     SharedPreferences readData;
+    String MapBoxGetnearBanklatitude;
+    String MapBoxGetnearBanklogitude;
+    String MapBoxGetnearResturantlatitude;
+    String MapBoxGetnearResturantlogitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_office );
+         MapBoxGetnearBanklatitude="32.436471";
+         MapBoxGetnearBanklogitude="74.114511";
+         MapBoxGetnearResturantlatitude="32.480029";
+         MapBoxGetnearResturantlogitude="74.092104";
+        MediaPlayer player = MediaPlayer.create(this,R.raw.route);
+        player.start();
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -96,6 +112,18 @@ public class Office extends AppCompatActivity implements OnMapReadyCallback, Map
         {
              readDestinationlatitude = readData.getString("HomeDestinationlatitude","");
              readDestinationlongitude = readData.getString("HomeDestinationlongitude","");
+        }
+
+        else if(place_name.equals("Bank"))
+        {
+            readDestinationlatitude =MapBoxGetnearBanklatitude;
+            readDestinationlongitude = MapBoxGetnearBanklogitude;
+        }
+        else if(place_name.equals("Resturant"))
+        {
+
+            readDestinationlatitude = MapBoxGetnearResturantlatitude;
+            readDestinationlongitude = MapBoxGetnearResturantlogitude;
         }
         else
         {
@@ -216,10 +244,10 @@ public class Office extends AppCompatActivity implements OnMapReadyCallback, Map
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
     @Override
     public void onExplanationNeeded(List<String> permissionsToExplain) {
@@ -277,10 +305,76 @@ public class Office extends AppCompatActivity implements OnMapReadyCallback, Map
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
+
+
+    public void makeCall()
+    {
+
+        if (Build.VERSION.SDK_INT < 23) {
+            phoneCall();
+        }else {
+
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+
+                phoneCall();
+            }else {
+                final String[] PERMISSIONS_STORAGE = {Manifest.permission.CALL_PHONE};
+                //Asking request Permissions
+                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 9);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        boolean permissionGranted = false;
+        switch(requestCode){
+            case 9:
+                permissionGranted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if(permissionGranted){
+            phoneCall();
+        }else {
+            Toast.makeText(this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void phoneCall(){
+        String no1 = readData.getString("spphno1","");
+        String no2 = readData.getString("spphno2","");
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:"+no1));
+            this.startActivity(callIntent);
+        }else{
+            Toast.makeText(this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Intent intent = getIntent();
+        String place_name = intent.getStringExtra("Place_NAME");
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            startActivity( new Intent(this,FavriouteLocation.class));
+            if(place_name.equals("Bank"))
+            {
+                startActivity( new Intent(this,OtherPlaces.class));
+            }
+            else if (place_name.equals("Resturant"))
+            {
+                startActivity( new Intent(this,OtherPlaces.class));
+            }
+            else {startActivity( new Intent(this,FavriouteLocation.class));}
+
+        }
+        if((keyCode==KeyEvent.KEYCODE_VOLUME_UP))
+        {
+            makeCall();
         }
         return true;
     }

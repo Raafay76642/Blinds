@@ -15,140 +15,64 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import me.leolin.shortcutbadger.ShortcutBadger;
-
-public class FavriouteLocation extends AppCompatActivity {
+public class OtherPlaces extends AppCompatActivity {
 
     SharedPreferences readData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favrioute_location);
+        setContentView(R.layout.activity_other_places);
         readData= getSharedPreferences("Dataguardian", MODE_PRIVATE);
-        LinearLayout masjid = findViewById(R.id.masjid);
-        LinearLayout school = findViewById(R.id.school);
-        LinearLayout park = findViewById(R.id.park);
-        LinearLayout home = findViewById(R.id.home);
-        LinearLayout office = findViewById(R.id.Office);
-        selectthis();
-        masjid.setOnLongClickListener(new View.OnLongClickListener() {
+        LinearLayout bank = findViewById(R.id.bank);
+        LinearLayout resturant = findViewById(R.id.resturants);
+
+        bank.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                masjid();
+                bank();
                 return true;
             }
         });
-        school.setOnLongClickListener(new View.OnLongClickListener() {
+        resturant.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                school();
+                resturant();
                 return true;
 
             }
         });
-        park.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                park();
-                return true;
-            }
-        });
-        office.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                office();
-                return true;
-            }
-        });
-        home.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                home();
-                return true;
-            }
-        });
     }
-
-
-
-    public void school()
+    public  void bank()
     {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.gotoschool);
+        MediaPlayer player = MediaPlayer.create(this,R.raw.bank);
         player.start();
 
+
     }
-    public void home()
+    public  void resturant()
     {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.home);
+        MediaPlayer player = MediaPlayer.create(this,R.raw.resturant);
         player.start();
 
-    }
-    public void masjid()
-    {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.masjid);
-        player.start();
-
-    }
-    public void office()
-    {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.office);
-        player.start();
-
-    }
-    public void park()
-    {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.park);
-        player.start();
-
-    }
-    public void selectthis()
-    {
-        MediaPlayer player = MediaPlayer.create(this,R.raw.selectedfavruoite);
-        player.start();
 
     }
 
-
-
-    public void openmasjid(View view)
+    public void openbank(View view)
     {
-        String placeName = "Masjid";
+        String placeName = "Bank";
         Intent intent = new Intent(this, Office.class);
         intent.putExtra("Place_NAME", placeName);
         startActivity(intent);
     }
-    public void openSchool(View view)
+    public void openresturant(View view)
     {
-
-        String placeName = "School";
+        String placeName = "Resturant";
         Intent intent = new Intent(this, Office.class);
         intent.putExtra("Place_NAME", placeName);
         startActivity(intent);
     }
-    public void openPark(View view)
-    {
 
-        String placeName = "Park";
-        Intent intent = new Intent(this, Office.class);
-        intent.putExtra("Place_NAME", placeName);
-        startActivity(intent);
-    }
-    public void openHome(View view)
-    {
 
-        String placeName = "Home";
-        Intent intent = new Intent(this, Office.class);
-        intent.putExtra("Place_NAME", placeName);
-        startActivity(intent);
-    }
-    public void openOffice(View view)
-    {
-
-        String placeName = "Office";
-        Intent intent = new Intent(this, Office.class);
-        intent.putExtra("Place_NAME", placeName);
-        startActivity(intent);
-    }
     public void makeCall()
     {
 
@@ -207,5 +131,8 @@ public class FavriouteLocation extends AppCompatActivity {
         }
         return true;
     }
+
+
+
 
 }

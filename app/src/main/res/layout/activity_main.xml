@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="180dp"
     android:orientation="horizontal"
-    android:onClick="goGurdian">
+    android:onClick="gotofavrouiteLocations">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="155dp"
@@ -44,6 +44,7 @@
 
 </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/OtherPlaces"
         android:background="@drawable/layoutround"
@@ -52,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:orientation="horizontal"
-        android:onClick="not">
+        android:onClick="gotoothers">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="155dp"

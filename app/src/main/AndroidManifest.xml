@@ -17,11 +17,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".setLocationMap"></activity>
-        <activity android:name=".SetLocation" />
-        <activity android:name=".Office" />
-        <activity android:name=".Emergancy_Number" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".OtherPlaces"
+            android:label="Other Places"></activity>
+        <activity android:name=".setLocationMap"
+            android:label="Set Location"/>
+        <activity android:name=".SetLocation"
+            android:label="Set LOcation"/>
+        <activity android:name=".Office"
+            android:label="Navigation"/>
+        <activity android:name=".Emergancy_Number"
+            android:label="Emergency Number"/>
+        <activity android:name=".MainActivity"
+            android:label="Blind Mode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

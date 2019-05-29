@@ -1,10 +1,14 @@
 package com.example.aser.blinds;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Trace;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -68,17 +72,60 @@ public class Emergancy_Number extends AppCompatActivity {
     }
     public void makeCall(View view)
     {
+
+        if (Build.VERSION.SDK_INT < 23) {
+            phoneCall();
+        }else {
+
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+
+                phoneCall();
+            }else {
+                final String[] PERMISSIONS_STORAGE = {Manifest.permission.CALL_PHONE};
+                //Asking request Permissions
+                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 9);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        boolean permissionGranted = false;
+        switch(requestCode){
+            case 9:
+                permissionGranted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if(permissionGranted){
+            phoneCall();
+        }else {
+            Toast.makeText(this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void phoneCall(){
         String no1 = readData.getString("spphno1","");
         String no2 = readData.getString("spphno2","");
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:"+no1));
+            this.startActivity(callIntent);
+        }else{
+            Toast.makeText(this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
 
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", no1, null));
-        startActivity(intent);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
            startActivity( new Intent(this,Guardian.class));
+        }
+        if((keyCode==KeyEvent.KEYCODE_VOLUME_UP))
+        {
+            phoneCall();
         }
         return true;
     }
